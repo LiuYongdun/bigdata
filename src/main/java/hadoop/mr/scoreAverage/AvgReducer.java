@@ -1,10 +1,10 @@
 package hadoop.mr.scoreAverage;
 
+import hadoop.common.tuple.Tuple2;
 import org.apache.hadoop.io.FloatWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
-import scala.Tuple2;
 
-import javax.xml.soap.Text;
 import java.io.IOException;
 import java.util.stream.StreamSupport;
 
@@ -19,6 +19,5 @@ public class AvgReducer extends Reducer<Text, Tuple2<Integer,Integer>,Text, Floa
         if(resultTuple._2!=0){
             context.write(key,new FloatWritable(resultTuple._1*1.0f/resultTuple._2));
         }
-
     }
 }
