@@ -1,49 +1,55 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.regex.Pattern;
+import datastructrue.BinaryTree;
+
+import java.util.*;
 
 public class JavaTest {
-
     public static void main(String[] args) {
-        Solution solution = new Solution();
-        System.out.println(solution.myAtoi("403"));
+        BinaryTree<String, String> tree = new BinaryTree<>();
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("waiting for input ...");
+        while (true){
+            String next = scanner.next();
+            tree.put(next,next);
+            tree.iterateTree();
+            tree.show();
+        }
     }
-
-
-
-
 }
+
+
 class Solution {
-    public int myAtoi(String s) {
-        String trimS = s.trim();
-        String[] splits = trimS.split("");
+    public boolean canPartitionKSubsets(int[] nums, int k) {
+        Arrays.sort(nums);
+        HashMap<Integer, Integer> usedMap = new HashMap<>();
 
-        if(splits.length==0)
-            return 0;
+        int sum = Arrays.stream(nums).sum();
+        if(sum%k!=0)
+            return false;
 
-        boolean isPositive = !splits[0].equals("-");
-        int startIdx=splits[0].matches("[0-9]")?0:1;
+        int result=sum/k;
 
-        ArrayList<String> nums = new ArrayList<>();
+        for (int i = nums.length - 1; i >= 0; i--) {
+            int curValue=nums[i];
+            usedMap.put(i,i);
+            int idx=i-1;
+            while (idx>0){
+                if(usedMap.get(idx)!=null){
+                    if(curValue+nums[idx]>result){
+                        idx-=1;
+                    }
+                    if(curValue+nums[idx]<=result){
+                        curValue=curValue+nums[idx];
+                        usedMap.put(idx,idx);
+                    }
+                }
+            }
 
-        for (int i = startIdx; i < splits.length; i++) {
-            if(splits[i].matches("[0-9]"))
-                nums.add(0,splits[i]);
-            else
-                break;
+            if(curValue!=result)
+                return false;
         }
 
-        Double result=0.0;
+        return true;
 
-        for (int i = 0; i < nums.size(); i++) {
-            result+=(nums.get(i).toCharArray()[0]-'0')*Math.pow(10,i);
-        }
-
-        result=isPositive?result:-result;
-        if(result<=-Math.pow(2,31))
-            return (int)-Math.pow(2,31);
-        if(result>=Math.pow(2,31)-1)
-            return (int)Math.pow(2,31)-1;
-        return (int)result.longValue();
     }
 }
